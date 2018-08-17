@@ -38,8 +38,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+# APPS
     'blog',
+
+# MEDIA FILES DELETE /SHOULD BE AT THE END/
+    'django_cleanup',
 )
 
 MIDDLEWARE_CLASSES = (
