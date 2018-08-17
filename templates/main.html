@@ -70,16 +70,8 @@ background-position: center center; background-repeat: no-repeat; position: abso
 </nav>
 
 <div class="container-fluid" style="margin-top: 10px;"></div>
-<style>
-.nav-tabs > li > a{ color: #000; background-color:#eee; }
-.nav-tabs > li > a:hover{ background-color: #ccc !important; color:#fff; }
-</style>
-<div class="navbar-collapse"><div class="tabbable">
-<ul class="nav nav-tabs">
-<li role="presentation"><a href="http://www.kuvalda.lv/gallery/">Lietotāju Galerija</a></li>
-<li role="presentation" class="active">
-<a href="/" style="background-color: #999;">Forums</a></li>
-</ul></div></div>
+{% block tabs %}{% endblock %}
+<div class="container-fluid" style="margin-top: 10px;"></div>
 {% block temas %}{% endblock %}
 {% block diskusijas %}{% endblock %}
 

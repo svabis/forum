@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.forms import ModelForm
-from blog.models import Tema, Ieraksts
+from blog.models import Ieraksts
 from django import forms
 
 

@@ -9,7 +9,7 @@ from django.core.context_processors import csrf # Form Komentari form security
 
 from forum.paginator import Paginator # import paginator
 
-from blog.models import Tema, Ieraksts
+from blog.models import SuperTema, Tema, Ieraksts
 
 from blog.forms import IerakstsForm
 
@@ -29,20 +29,22 @@ def get_client_ip(request):
 # !!!!!!! MAIN ARGUMENT DEFINITION
 def main_header(request):
     args = {}
+    args['super'] = SuperTema.objects.all().order_by('order')
     args['title'] = u'Forums | kuvalda.lv'
     args['ip'] = get_client_ip(request)	# gets IP, and adds it to statistics models
     return args
 
 
 # ================================================================================
-# MAIN SKATS
+# MAIN SKATS --> Visas Temas
 def main(request, pageid=1):
     args = main_header(request)
-    args['heading'] = u'Forums'
+    args['heading'] = u'Forums | Visas tēmas'
+    args['active_tab'] = "visas"
 
     results_per_page = 20
 
-    rez_obj = Tema.objects.all().order_by('-last_entry')
+    rez_obj = Tema.objects.filter(comment=True).order_by('-last_entry')
 
     if int(pageid) < 1: # negative page number --> 404
         return redirect ('/')
@@ -58,9 +60,28 @@ def main(request, pageid=1):
         end_obj = rez_obj.count()
 
     args['paginator'] = Paginator( pagecount, pageid )
-#    args['results'] = rez_obj.order_by('surname')[start_obj:end_obj] # -argument is for negative sort
-
     args['temas'] = rez_obj[start_obj:end_obj]
+    response = render_to_response('temas.html', args)
+    return response
+
+
+# ================================================================================
+# SUPER TEMAS (Izvele pa kategorijam)
+def super(request, s_id):
+    args = main_header(request)
+
+    try:
+        s = SuperTema.objects.get(slug=str(s_id))
+    except:
+        redirect('/')
+
+    args['heading'] = u'Forums | ' + s.title
+    args['active_tab'] = s.slug
+
+    temas = Tema.objects.filter(relate_to_super = s)
+
+    args['temas'] = temas
+# CHANGE TEMPLATE (MAYBIE)
     response = render_to_response('temas.html', args)
     return response
 
@@ -69,7 +90,7 @@ def main(request, pageid=1):
 # TEMA
 def temas(request, t_id, pageid=1):
     try:
-        t = Tema.objects.get(id=int(t_id))
+        t = Tema.objects.get(slug=str(t_id))
     except:
         return redirect ('/')
 
@@ -81,14 +102,14 @@ def temas(request, t_id, pageid=1):
     except:
         pass
 
-    args['heading'] = u'Forums'
+    args['heading'] = u'Forums | ' + t.relate_to_super.title
 
     args['tema_nr'] = t.id
     args['tema_title'] = t.title
 
     results_per_page = 50
 
-    rez_obj = Ieraksts.objects.filter(relat_to = t).order_by('date')
+    rez_obj = Ieraksts.objects.filter(relate_to = t).order_by('date')
 
     if int(pageid) < 1: # negative page number --> 404
         return redirect ('/')
@@ -113,8 +134,7 @@ def temas(request, t_id, pageid=1):
         if form.is_valid():
             user = unicode( request.POST.get('user', '') )
             new_coment = form.save()
-#            new_coment = form
-            new_coment.relat_to = t
+            new_coment.relate_to = t
             new_coment.save()
 
             t.last_entry = new_coment.date

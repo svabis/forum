@@ -1,17 +1,26 @@
 {% extends 'main.html' %}
-{% block kamera %}
+{% block tabs %}
+
 <style>
 .nav-tabs > li > a{ color: #000; background-color:#eee; }
 .nav-tabs > li > a:hover{ background-color: #ccc !important; color:#fff; }
 </style>
-<div class="navbar-collapse"><div class="tabbable">
-<ul class="nav nav-tabs">
-<li role="presentation"><a href="http://www.kuvalda.lv/gallery/">Lietotāju Galerija</a></li>
-<li role="presentation" class="active">
-<a href="/" style="background-color: #999;">Forums</a></li>
-</ul></div></div>
-{% block paginator %}{% endblock %}
-{% block grid %}{% endblock %}
-{% block image %}{% endblock %}
+
+<div class="navbar-collapse">
+ <div class="tabbable">
+  <ul class="nav nav-tabs">
+   <li role="presentation"><a href="http://www.kuvalda.lv/gallery/">Lietotāju Galerija</a></li>
+   <li role="presentation" class="active">
+{% if active_tab == "visas" %}<li role="presentation" class="active">{% else %}<li role="presentation">{% endif %}
+<a href="/">Visas</a></li>
+
+{% for s in super %}
+{% if active_tab == s.slug %}<li role="presentation" class="active">{% else %}<li role="presentation">{% endif %}
+<a href="/{{ s.slug }}/">{{ s.title }}</a></li>
+{% endfor%}
+
+  </ul>
+ </div>
+</div>
 
 {% endblock %}

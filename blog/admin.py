@@ -1,17 +1,25 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from blog.models import Tema, Ieraksts
+from blog.models import SuperTema, Tema, Ieraksts
 
 
 class TemaAdmin(admin.ModelAdmin):
-    list_display = ['title', 'last_entry', 'entry_count']
-    list_filter = ['last_entry']
+# IF REMARK IS REMOVED --> ADMIN CRASHES
+#    prepopulated_fields = {'slug': ('title')}
+    list_display = ['relate_to_super', 'parent', 'comment', 'title', 'slug', 'last_entry', 'entry_count']
+    list_filter = ['last_entry', 'comment']
+
+
+class SuperTemaAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('title',),}
+    list_display = ['order', 'title', 'slug']
 
 
 class IerakstsAdmin(admin.ModelAdmin):
-    list_display = ['relat_to', 'user', 'date', 'text'] # image
+    list_display = ['relate_to', 'user', 'date', 'text']
     list_filter = ['date']
 
 
+admin.site.register(SuperTema, SuperTemaAdmin)
 admin.site.register(Tema, TemaAdmin)
 admin.site.register(Ieraksts, IerakstsAdmin)

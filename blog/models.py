@@ -8,15 +8,13 @@ import datetime
 import random
 import string
 
-def rand_slug():
-    return ''.join(random.choice(string.ascii_letters) for _ in range(8))
+def rand_slug(instance):
+    return ''.join(random.choice(string.ascii_letters) for _ in range(10))
 
 from slugify import slugify
 
 def upload_path(instance, filename):
-#    ext = filename.split('.')[-1]
-    filename =  slugify(unicode(filename))
-    return os.path.join('forum_img/', filename)
+    return os.path.join('forum_img/', slugify(unicode(filename)) )
 
 
 # =================================================================================================================
@@ -24,24 +22,34 @@ class SuperTema(models.Model):
     class Meta():
         db_table = "super_tema"
 
-    title = models.TextField( max_length = 100 )
-    slug = models.SlugField( unique = True, default=rand_slug() )
+    order = models.IntegerField( default = 0 )
+    title = models.CharField( max_length = 100 )
+    slug = models.SlugField( unique = True, max_length=50, default=rand_slug(title) )
 
-#    last_entry = models.DateTimeField( default = timezone.now )
-#    entry_count = models.IntegerField( default = 0 )
+    def __unicode__(self):
+        return u'%s' % (self.title)
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(SuperTema, self).save(*args, **kwargs)
 
 # =================================================================================================================
 class Tema(models.Model):
     class Meta():
         db_table = "tema"
 
-    title = models.TextField( max_length = 100 )
+    relate_to_super = models.ForeignKey( SuperTema, default=1 )
+    parent = models.ForeignKey( 'Tema', blank=True, null=True )
 
-#    slug = 
-
+    title = models.CharField( max_length = 100 )
+    slug = models.SlugField( unique = True, max_length=50, default=rand_slug(title) )
     last_entry = models.DateTimeField( default = timezone.now )
     entry_count = models.IntegerField( default = 0 )
+
+    comment = models.BooleanField( default=False ) # coments enabled
+
+    def __unicode__(self):
+        return u'%s' % (self.title)
 
 
 # =================================================================================================================
@@ -49,9 +57,9 @@ class Ieraksts(models.Model):
     class Meta():
         db_table = "ieraksts"
 
-    relat_to = models.ForeignKey( Tema, default = 1 )
+    relate_to = models.ForeignKey( Tema, default = 1 )
     user = models.CharField( max_length = 20 )
     date = models.DateTimeField( default = timezone.now )
-    text = models.CharField( max_length = 500 )
+    text = models.TextField( max_length = 500 )
 
     image = models.ImageField( blank = True, null = True, upload_to = upload_path)

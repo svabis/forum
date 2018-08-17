@@ -10,7 +10,7 @@ class Command(BaseCommand):
         temas = Tema.objects.all()
 
         for t in temas:
-            temp_i = Ieraksts.objects.filter(relat_to=t)
+            temp_i = Ieraksts.objects.filter(relate_to = t)
             count = temp_i.count()
 
             t.entry_count = count

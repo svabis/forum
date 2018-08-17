@@ -27,10 +27,15 @@ urlpatterns = [
 #    url(r'^tema/(?P<t_id>\d+)/add/$', 'blog.views.temas'),
 
 # temas diskusijas
-    url(r'^tema/(?P<t_id>\d+)/(?P<pageid>\d+)$', 'blog.views.temas'),
-    url(r'^tema/(?P<t_id>\d+)/$', 'blog.views.temas'),
+    url(r'^tema/(?P<t_id>[-\w]+)/(?P<pageid>\d+)$', 'blog.views.temas'),
+    url(r'^tema/(?P<t_id>[-\w]+)/$', 'blog.views.temas'),
 
-# MAIN --> temas
+
+# SUPER TEMA
+    url(r'^(?P<s_id>[-\w]+)/$', 'blog.views.super'),
+
+
+# MAIN --> Visas temas
     url(r'^(?P<pageid>\d+)/$', 'blog.views.main'),
     url(r'^', 'blog.views.main'),
 ]
