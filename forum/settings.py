@@ -22,12 +22,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'uw(8xyvv@vtev673mi@e$s)n##5-cw649q_r%s(jnhxlu8+u&j'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-#DEBUG = True
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+#SESSION_COOKIE_DOMAIN = '.kuvalda.lv'
+#SESSION_COOKIE_NAME = 'forumsessionid'
 
 # Application definition
 
@@ -40,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 # APPS
     'blog',
+    'loginsys',
 
 # MEDIA FILES DELETE /SHOULD BE AT THE END/
     'django_cleanup',
@@ -83,6 +87,14 @@ WSGI_APPLICATION = 'forum.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'kuvalda_db',
+#        'USER': 'kuvalda_web',
+#        'PASSWORD': 'kuv@ld@_WEB!',
+#        'HOST': '95.85.51.204',
+#        'PORT': '3306',
+#    },
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'forum',
@@ -90,9 +102,6 @@ DATABASES = {
         'PASSWORD': 'hlu8Jmhq',
         'HOST': 'localhost',
         'PORT': '3306',
-
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 

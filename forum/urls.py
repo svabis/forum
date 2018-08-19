@@ -12,10 +12,6 @@ admin.autodiscover()
 #admin.site.login = login_required(admin.site.login)
 
 urlpatterns = [
-    # Examples:
-    # url(r'^$', 'main.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
 # STATIC AND MEDIA
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT,}),
     url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT,}),
@@ -23,19 +19,21 @@ urlpatterns = [
 # ADMIN
     url(r'^admin9876/', include(admin.site.urls)),
 
-# pievienot diskusijas ierakstu
-#    url(r'^tema/(?P<t_id>\d+)/add/$', 'blog.views.temas'),
+# LOGIN
+    url(r'^auth/', include('loginsys.urls')),
 
-# temas diskusijas
-    url(r'^tema/(?P<t_id>[-\w]+)/(?P<pageid>\d+)$', 'blog.views.temas'),
-    url(r'^tema/(?P<t_id>[-\w]+)/$', 'blog.views.temas'),
+# temas diskusijas + add Ieraksts
+#    url(r'^tema/(?P<t_id>[-\w]+)/(?P<pageid>\d+)$', 'blog.views.temas'),
+#    url(r'^tema/(?P<t_id>[-\w]+)/$', 'blog.views.temas'),
+    url(r'^(?P<s_id>[-\w]+)/(?P<t_id>[-\w]+)/(?P<pageid>\d+)$', 'blog.views.temas'),
+    url(r'^(?P<s_id>[-\w]+)/(?P<t_id>[-\w]+)/$', 'blog.views.temas'),
 
 
-# SUPER TEMA
+# SuperTema izvele
     url(r'^(?P<s_id>[-\w]+)/$', 'blog.views.super'),
 
 
-# MAIN --> Visas temas
+# MAIN --> Visas Tema ar comment=True
     url(r'^(?P<pageid>\d+)/$', 'blog.views.main'),
     url(r'^', 'blog.views.main'),
 ]

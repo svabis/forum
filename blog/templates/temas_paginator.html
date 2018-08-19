@@ -35,6 +35,14 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 {% block tema_data %}{% endblock %}
 </div>
 
+{% if add_tema %}
+<div class="container">
+ <center>
+  <h4>{% if user.username %}<a href="#">Pievienot Tēmu vai Diskusiju</a>{% else %}
+  Lai pievienotu Tēmu vai Diskusiju nepieciešams <a href="/auth/login/">Autorizēties</a> vai arī <a href="/auth/register/">Reģistrēt lietotāju</a>{% endif %}</h4>
+ </center>
+</div>
+{% endif %}
 
 <div class="col-lg-12 col-md-12 col-sm-12">
 

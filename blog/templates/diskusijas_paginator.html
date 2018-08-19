@@ -8,9 +8,13 @@ jQuery(document).ready(function($) {
   $(".clickable-row").click(function(e) {
     window.location.href = "/tema/" + $(this).children('td')[0].innerHTML + "/";
   });
-{% if user %}    $("#id_user").val("{{ user }}");{% endif %}
+
  // IMAGE ADD BUTTON
  $("#image").click(function (){ $(this).parent().find("input").click(); });
+
+{% if user.username %}
+ $(".form_cover_text").hide(); $(".form_cover").hide(); 
+{% endif %}
 });
 
 // IMAGE PREVIEW
@@ -23,12 +27,18 @@ function readURL(input, display) {
 };
 </script>
 
+<style>
+.comment_form { margin-top:10px; margin-bottom: 10px; border-top: solid red 2px; border-bottom: solid red 2px; padding-top: 5px; position: relative; }
+.form_cover { position:absolute; top: 0px; left:0px; width:100%; height:100%; background-color: #777; z-index: 10; opacity: 0.8;  }
+.form_cover_text { position:absolute; top: 40%; left:0px; width:100%; height:50%; z-index: 20; display: block; }
+</style>
+
 <div class="container">
  <div class="row">
   <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4" style="margin-top: 17px;">
    <a href="/"><button type="button" class="btn" style="border: solid #aaa 1px;">
     <span class="glyphicon glyphicon-backward" aria-hidden="true"> </span> &nbsp;Visas Tēmas</button></a>
-   <a href="#id_user"><button type="button" class="btn" style="border: solid #aaa 1px;">
+   <a href="#user"><button type="button" class="btn" style="border: solid #aaa 1px;">
     <span class="glyphicon glyphicon-save" aria-hidden="true"> </span> &nbsp;Pēdējais komentārs</button></a>
   </div>
   <div class="col-xs-6 col-sm-6 col-md-7 col-lg-8" style="padding-right: 0px;">
@@ -39,18 +49,19 @@ function readURL(input, display) {
 
 <div class="container">
 {% block diskusija_data %}{% endblock %}
-
-<div class="row">
- <hr style="border-top: 2px solid red; margin: 10px;">
 </div>
 
-<form action="/tema/{{ tema_nr }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
+<div class="container comment_form">
+ <div class="form_cover"></div>
+ <div class="form_cover_text">
+  <center><h4><b class="text-danger">Lai pievienotos diskusijai nepieciešams <a href="/auth/login/">Autorizēties</a></b></h4></center>
+ </div>
+ <form action="/tema/{{ tema_slug }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
   <div class="form-group">
    <div class="row">
     <div class="col-lg-2 col-md-2 col-sm-2" style="padding-top: 7px; border-right: solid #888 1px;">
      <label for="{{ form.user.id_for_label }}">Lietotājs:</label>
-      {{ form.user.errors }}
-      {{ form.user }}
+      <input class="form-control" id="new_comment" name="user" readonly="readonly" type="text" value="{{ user.username }}">
       <center>
        <img id="image" src="{% static 'attach.jpeg' %}" style="display: block; max-width: 100px; max-height: 100px; with: auto; height: auto; margin-top: 10px;"/>
        <input id="id_image" type="file" name="image" style="display: none" onchange="readURL(this, 'image');"/>
@@ -75,13 +86,9 @@ function readURL(input, display) {
       <center><input class="btn btn-primary" style="min-width: 300px;" type="submit" value="Pievienot komentāru"></center>
      </div>
     </div>
- </div>
-
-
    </div>
-</form>
-
-<hr style="border-top: 3px solid red; margin: 0px;">
+  </div>
+ </form>
 </div>
 
 {% endblock %}

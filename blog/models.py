@@ -2,6 +2,8 @@
 from django.utils import timezone
 from django.db import models
 
+from django.contrib.auth.models import User # autorisation library
+
 import os
 import datetime
 
@@ -41,6 +43,9 @@ class Tema(models.Model):
     relate_to_super = models.ForeignKey( SuperTema, default=1 )
     parent = models.ForeignKey( 'Tema', blank=True, null=True )
 
+    created_by = models.ForeignKey( User, default = 1 )
+    created_date = models.DateTimeField( default = timezone.now )
+
     title = models.CharField( max_length = 100 )
     slug = models.SlugField( unique = True, max_length=50, default=rand_slug(title) )
     last_entry = models.DateTimeField( default = timezone.now )
@@ -58,7 +63,10 @@ class Ieraksts(models.Model):
         db_table = "ieraksts"
 
     relate_to = models.ForeignKey( Tema, default = 1 )
-    user = models.CharField( max_length = 20 )
+
+    user = models.ForeignKey( User, default = 1 )
+#    user = models.CharField( max_length = 20 )
+
     date = models.DateTimeField( default = timezone.now )
     text = models.TextField( max_length = 500 )
 

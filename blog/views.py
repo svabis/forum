@@ -2,8 +2,8 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, redirect # response to template, redirect to another view
 
-#from django.contrib.auth.models import User     # Django Users library
-#from django.contrib import auth # autorisation library
+from django.contrib.auth.models import User     # Django Users library
+from django.contrib import auth # autorisation library
 
 from django.core.context_processors import csrf # Form Komentari form security
 
@@ -32,6 +32,7 @@ def main_header(request):
     args['super'] = SuperTema.objects.all().order_by('order')
     args['title'] = u'Forums | kuvalda.lv'
     args['ip'] = get_client_ip(request)	# gets IP, and adds it to statistics models
+    args['user'] = auth.get_user(request)
     return args
 
 
@@ -44,7 +45,7 @@ def main(request, pageid=1):
 
     results_per_page = 20
 
-    rez_obj = Tema.objects.filter(comment=True).order_by('-last_entry')
+    rez_obj = Tema.objects.filter( comment = True ).order_by('-last_entry')
 
     if int(pageid) < 1: # negative page number --> 404
         return redirect ('/')
@@ -78,9 +79,10 @@ def super(request, s_id):
     args['heading'] = u'Forums | ' + s.title
     args['active_tab'] = s.slug
 
-    temas = Tema.objects.filter(relate_to_super = s)
+    temas = Tema.objects.filter( relate_to_super = s, parent = None ).order_by('-last_entry')
 
     args['temas'] = temas
+    args['add_tema'] = True
 # CHANGE TEMPLATE (MAYBIE)
     response = render_to_response('temas.html', args)
     return response
@@ -88,23 +90,29 @@ def super(request, s_id):
 
 # ================================================================================
 # TEMA
-def temas(request, t_id, pageid=1):
+def temas(request, s_id, t_id, pageid=1):
     try:
         t = Tema.objects.get(slug=str(t_id))
     except:
         return redirect ('/')
 
     args = main_header(request)
+    args['heading'] = u'Forums | ' + t.relate_to_super.title + " | " + t.title
+    args['active_tab'] = t.relate_to_super.slug
+
+   # IF TEMA COMMENT IS DISABLED
+    if t.comment == False:
+        temas = Tema.objects.filter( parent = t ).order_by('-last_entry')
+        args['temas'] = temas
+        args['add_tema'] = True
+
+        response = render_to_response('temas.html', args)
+        return response
+
     args.update(csrf(request)) # ADD CSRF TOKEN
 
-    try:
-        args['user'] = str(request.COOKIES.get(str('forum_user')))
-    except:
-        pass
-
-    args['heading'] = u'Forums | ' + t.relate_to_super.title
-
     args['tema_nr'] = t.id
+    args['tema_slug'] = t.slug
     args['tema_title'] = t.title
 
     results_per_page = 50
@@ -126,23 +134,31 @@ def temas(request, t_id, pageid=1):
 
     args['paginator'] = Paginator( pagecount, pageid )
     args['diskusija'] = rez_obj[start_obj:end_obj]
+
     args['form'] = IerakstsForm
 
     if request.POST:
         form = IerakstsForm( request.POST, request.FILES )
+        form.user = args['user']
 
         if form.is_valid():
-            user = unicode( request.POST.get('user', '') )
             new_coment = form.save()
             new_coment.relate_to = t
+            new_coment.user = args['user']
             new_coment.save()
 
-            t.last_entry = new_coment.date
-            t.entry_count += 1
-            t.save()
+            while t.parent != None:
+                try:
+                    t.parent.last_entry = new_coment.date
+                    t.parent.save()
+                except:
+                    pass
+                t.last_entry = new_coment.date
+                t.entry_count += 1
+                t.save()
+                t = t.parent
 
-            response = redirect('/tema/' + str(t_id) + '/#id_user')
-            response.set_cookie( key='forum_user', value=user )
+            response = redirect('/tema/' + str(t_id) + '/#new_comment')
             return response
     else:
         args['form'] = IerakstsForm

@@ -7,7 +7,7 @@ class TemaAdmin(admin.ModelAdmin):
 # IF REMARK IS REMOVED --> ADMIN CRASHES
 #    prepopulated_fields = {'slug': ('title')}
     list_display = ['relate_to_super', 'parent', 'comment', 'title', 'slug', 'last_entry', 'entry_count']
-    list_filter = ['last_entry', 'comment']
+    list_filter = ['last_entry', 'comment', 'relate_to_super']
 
 
 class SuperTemaAdmin(admin.ModelAdmin):

@@ -5,12 +5,12 @@
 <script>
 jQuery(document).ready(function($) {
   $(".clickable-row").click(function(e) {
-    window.location.href = "/tema/" + $(this).children('td')[0].innerHTML + "/";
+    window.location.href = "/" + $(this).children('td')[0].innerHTML + "/" + $(this).children('td')[1].innerHTML + "/";
   });
 });
 </script>
 
-<table class="table table-hover table-striped table-condensed">
+<table class="table table-hover table-striped">
  <thead>
   <tr style="background: #aaa;">
    <th style="vertical-align: top;" class="col-lg-1 col-md-1 col-sm-1">Temats</th>
@@ -21,12 +21,14 @@ jQuery(document).ready(function($) {
  <tbody>
 {% for t in temas %}
   <tr class="clickable-row">
+   <td style="display:none;">{{ t.relate_to_super.slug }}</td>
    <td style="display:none;">{{ t.slug }}</td>
    <td>{{ t.relate_to_super.title }}</td>
-   <td>{{ t.title }} {% if t.comment %}<span class="badge" id="in_club_count"> {{ t.entry_count }}</span>{% endif %}</td>
+   <td>{{ t.title }}&nbsp;&nbsp;<span class="badge"> {{ t.entry_count }}</span></td>
    <td class="text-right">{{ t.last_entry|date:"d/m/Y H:i" }}</td>
   </tr>
 {% endfor %}
  </tbody>
 </table>
 {% endblock %}
+
