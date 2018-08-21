@@ -2,33 +2,38 @@
 {% load staticfiles %}
 
 {% block tema_data %}
-<script>
-jQuery(document).ready(function($) {
-  $(".clickable-row").click(function(e) {
-    window.location.href = "/" + $(this).children('td')[0].innerHTML + "/" + $(this).children('td')[1].innerHTML + "/";
-  });
-});
-</script>
+<style>
+ .comments { border-radius: 10px; border: solid #888 1px; background-color: #eee; margin-bottom: 2px; position: relative; }
+ .user { border-right: solid #ccc 1px; margin-left: 10px; height:100%; }
+ .tema_body { margin-left: -10px; padding-left: 20px; overflow:hidden; }
+ .tema_head { background-color: #ccc; height: 10px; border-top-left-radius: 10px; border-top-right-radius: 10px;}
 
-<table class="table table-hover table-striped">
- <thead>
-  <tr style="background: #aaa;">
-   <th style="vertical-align: top;" class="col-lg-1 col-md-1 col-sm-1">Temats</th>
-   <th style="vertical-align: top;" class="col-lg-9 col-md-7 col-sm-7">Diskusija Tēma</th>
-   <th style="vertical-align: top;" class="col-lg-2 col-md-4 col-sm-4 text-right">Pēdējais ieraksts</th>
-  </tr>
- </thead>
- <tbody>
+ .comments h5, .comments h6 { color: #555; }
+ .comments h4 { margin: 10px; }
+ .comments .badge { margin-top: -3px; }
+</style>
+
 {% for t in temas %}
-  <tr class="clickable-row">
-   <td style="display:none;">{{ t.relate_to_super.slug }}</td>
-   <td style="display:none;">{{ t.slug }}</td>
-   <td>{{ t.relate_to_super.title }}</td>
-   <td>{{ t.title }}&nbsp;&nbsp;<span class="badge"> {{ t.entry_count }}</span></td>
-   <td class="text-right">{{ t.last_entry|date:"d/m/Y H:i" }}</td>
-  </tr>
+<a href="/{{ t.relate_to_super.slug }}/{{ t.slug }}/">
+ <div class="row comments">
+  <div class="col-sm-12 col-md-12 col-lg-12 tema_head"></div>
+  <div class="col-sm-2 col-md-2 col-lg-2 user">
+   <h5><b>{{ t.relate_to_super }}</b></h5>
+   <h5>Izveidoja: {{ t.created_by }}</h5>
+   <h6>{{ t.created_date|date:"d/m/Y H:i" }}</h6>
+  </div>
+  <div class="col-sm-8 col-md-8 col-lg-8 tema_body">
+   <h5><b>{% if t.comment %}Diskusija{% else %}Temats{% endif %}</b></h5>
+   <h4>{{ t.title }}&nbsp;&nbsp;<span class="badge"> {{ t.entry_count }}</span></h4>
+  </div>
+  <div class="col-sm-2 col-md-2 col-lg-2">
+   <center>
+    <h5><b>Pēdējais ieraksts</b></h5>
+    <h5>{{ t.last_entry|date:"d/m/Y H:i" }}</h5>
+   </center>
+  </div>
+ </div>
+</a>
 {% endfor %}
- </tbody>
-</table>
-{% endblock %}
 
+{% endblock %}

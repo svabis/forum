@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+{% block loginsys %}
+
+<form method=POST>
+  <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-8  col-offset-5 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-2">
+{% csrf_token %}
+ {% for field in form %}
+   <div class="form-group">
+     {{ field.label_tag }}
+     {% if field.help_text %}
+       <small style="color: grey">{{ field.help_text }}</small>
+     {% endif %}
+     {{ field }}
+       {% for error in field.errors %}
+           <p style="color: red">{{ error }}</p>
+       {% endfor %}
+   </div>
+ {% endfor %}
+
+   <div class="form-group">
+    <center>
+     <input class="btn btn-primary" type="submit" value="Reģistrēties">
+     <a href="/auth/login/"><button type="button" class="btn btn-primary">Autorizēties</button></a>
+    </center>
+   </div>
+  </div>
+</form>
+
+{% endblock %}
+
+  <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+  </form>
+
+

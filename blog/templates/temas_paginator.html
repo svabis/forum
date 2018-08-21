@@ -3,6 +3,42 @@
 
 {% block temas %}
 
+<script>
+$(document).ready(function () {  $("#id_comment").hide(); });
+
+function show_add_form() { $("#tema_form").show(); }
+
+function chk_one(el) {
+  id = el.id; var chk_id_list = ['chk1', 'chk2'];
+  var checked = document.getElementById(id).checked;
+
+  for (var i = 0; 2 > i; i++) { document.getElementById( chk_id_list[i] ).checked = false; }
+  document.getElementById(id).checked = checked;
+
+  if (id=='chk2') { $("#id_comment").prop('checked', true); } else { $("#id_comment").prop('checked', false); }
+  var counter = 0; for (var i = 0; 2 > i; i++) { if (document.getElementById( chk_id_list[i] ).checked != false) { counter++; } }
+  if (counter == 0) { $("#tema_add_btn").prop('disabled', 'disabled'); } else { $("#tema_add_btn").removeAttr("disabled"); }
+}
+</script>
+
+{% if disable_back %}{% else %}
+<div class="container" style="margin-bottom: 5px;">
+ <div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+{% if parent %}
+  <a href="/{{ s_id }}/{{ parent.slug }}/"><button type="button" class="btn" style="border: solid #aaa 1px; margin-top: 3px;"">
+   <span class="glyphicon glyphicon-backward" aria-hidden="true"> </span></button>
+  </a>
+{% else %}
+  <a href="/{{ s_id }}/"><button type="button" class="btn" style="border: solid #aaa 1px; margin-top: 3px;"">
+   <span class="glyphicon glyphicon-backward" aria-hidden="true"> </span></button>
+  </a>
+{% endif %}
+  </div>
+ </div>
+</div>
+{% endif %}
+
 <div class="col-lg-12 col-md-12 col-sm-12">
 
 {% if paginator.visible %}
@@ -38,8 +74,8 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 {% if add_tema %}
 <div class="container">
  <center>
-  <h4>{% if user.username %}<a href="#">Pievienot Tēmu vai Diskusiju</a>{% else %}
-  Lai pievienotu Tēmu vai Diskusiju nepieciešams <a href="/auth/login/">Autorizēties</a> vai arī <a href="/auth/register/">Reģistrēt lietotāju</a>{% endif %}</h4>
+  <h4>{% if user.username %}<a href="#add_tema" id="add_tema" onclick="show_add_form()">Pievienot Tēmu vai Diskusiju</a>{% else %}
+  Lai pievienotu Tēmu vai Diskusiju nepieciešams <a href="/auth/login/">Autorizēties</a> vai arī <a href="/auth/signup/">Reģistrēt lietotāju</a>{% endif %}</h4>
  </center>
 </div>
 {% endif %}
@@ -70,6 +106,30 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 </ul></center>
 {% endif %}
 
+</div>
+
+<div class="container tema_form" id="tema_form" style="display: none;">
+<hr>
+ <form id="tema_form_form" action="/add_tema/" method="post" enctype="multipart/form-data">{% csrf_token %}
+  <div class="form-group">
+    {{ form.title.label_tag }}
+    <small style="color: grey">{{ form.title.help_text }}</small>
+    {{ form.title }}
+    {{ form.title.errors }}
+    {{ form.comment }}
+  </div>
+  <div class="form-group">
+    <h5><b>Pievienot tēmu vai diskusiju?</b></h5>
+    <div class="checkbox">
+     <label style="margin-left:10px;"><input type="checkbox" id="chk1" onclick="chk_one(this);"></input>Tēma - dalījums diskusijās</label>
+    </div>
+    <div class="checkbox">
+     <label style="margin-left:10px;"><input type="checkbox" id="chk2" onclick="chk_one(this);"></input>Diskusija - konkrēta diskusija ar ierakstiem</label>
+    </div>
+  </div>
+  <center><input id="tema_add_btn" class="btn btn-primary" style="min-width: 300px;" type="submit" value="Pievienot" disabled></center>
+ </form>
+<hr>
 </div>
 
 {% endblock %}

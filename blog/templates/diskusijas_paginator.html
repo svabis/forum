@@ -35,10 +35,10 @@ function readURL(input, display) {
 
 <div class="container">
  <div class="row">
-  <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4" style="margin-top: 17px;">
-   <a href="/"><button type="button" class="btn" style="border: solid #aaa 1px;">
-    <span class="glyphicon glyphicon-backward" aria-hidden="true"> </span> &nbsp;Visas Tēmas</button></a>
-   <a href="#user"><button type="button" class="btn" style="border: solid #aaa 1px;">
+  <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4"> 
+   <a href="/{{ s_id }}/{{ parent.slug }}/"><button type="button" class="btn" style="border: solid #aaa 1px; margin-right: 10px; margin-top: 3px;">
+    <span class="glyphicon glyphicon-backward" aria-hidden="true"> </span></button></a>
+   <a href="#new_comment"><button type="button" class="btn" style="border: solid #aaa 1px;">
     <span class="glyphicon glyphicon-save" aria-hidden="true"> </span> &nbsp;Pēdējais komentārs</button></a>
   </div>
   <div class="col-xs-6 col-sm-6 col-md-7 col-lg-8" style="padding-right: 0px;">
@@ -56,7 +56,7 @@ function readURL(input, display) {
  <div class="form_cover_text">
   <center><h4><b class="text-danger">Lai pievienotos diskusijai nepieciešams <a href="/auth/login/">Autorizēties</a></b></h4></center>
  </div>
- <form action="/tema/{{ tema_slug }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
+ <form action="/{{ s_id }}/{{ tema_slug }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
   <div class="form-group">
    <div class="row">
     <div class="col-lg-2 col-md-2 col-sm-2" style="padding-top: 7px; border-right: solid #888 1px;">
@@ -76,8 +76,8 @@ function readURL(input, display) {
    </div>
    <div class="row" style="border-top: solid #888 1px;">
     <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4" style="margin-top: 17px;">
-      <a href="/"><button type="button" class="btn" style="border: solid #aaa 1px;">
-       <span class="glyphicon glyphicon-backward" aria-hidden="true"> </span> &nbsp;Visas Tēmas</button></a>
+      <a href="/{{ s_id }}/{{ parent.slug }}/"><button type="button" class="btn" style="border: solid #aaa 1px; margin-right: 10px;">
+        <span class="glyphicon glyphicon-backward" aria-hidden="true"> </span></button></a>
       <a href="#"><button type="button" class="btn" style="border: solid #aaa 1px;">
        <span class="glyphicon glyphicon-open" aria-hidden="true"> </span> &nbsp;Pirmais komentārs</button></a>
     </div>

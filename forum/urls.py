@@ -1,15 +1,16 @@
+# -*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url
 
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings        # FOR STATIC AND MEDIA FILE ACCESS
 
-#from django.contrib.auth.decorators import login_required # LOGIN
+from django.contrib.auth.decorators import login_required # LOGIN
 from django.contrib import admin
 
 
 admin.autodiscover()
-#admin.site.login = login_required(admin.site.login)
+admin.site.login = login_required(admin.site.login)
 
 urlpatterns = [
 # STATIC AND MEDIA
@@ -22,19 +23,20 @@ urlpatterns = [
 # LOGIN
     url(r'^auth/', include('loginsys.urls')),
 
-# temas diskusijas + add Ieraksts
-#    url(r'^tema/(?P<t_id>[-\w]+)/(?P<pageid>\d+)$', 'blog.views.temas'),
-#    url(r'^tema/(?P<t_id>[-\w]+)/$', 'blog.views.temas'),
-    url(r'^(?P<s_id>[-\w]+)/(?P<t_id>[-\w]+)/(?P<pageid>\d+)$', 'blog.views.temas'),
-    url(r'^(?P<s_id>[-\w]+)/(?P<t_id>[-\w]+)/$', 'blog.views.temas'),
+# MAIN --> Visas Tema ar comment=True
+    url(r'^page=(?P<pageid>\d+)/$', 'blog.views.main'),
 
+# ADD TEMA
+    url(r'^add_tema/$', 'blog.views.add_tema'),
+
+# temas diskusijas + add Ieraksts
+    url(r'^(?P<s_id>[-\w]+)/(?P<t_id>[-\w]+)/(?P<pageid>\d+)/$', 'blog.views.temas'),
+    url(r'^(?P<s_id>[-\w]+)/(?P<t_id>[-\w]+)/$', 'blog.views.temas'),
 
 # SuperTema izvele
     url(r'^(?P<s_id>[-\w]+)/$', 'blog.views.super'),
 
-
 # MAIN --> Visas Tema ar comment=True
-    url(r'^(?P<pageid>\d+)/$', 'blog.views.main'),
     url(r'^', 'blog.views.main'),
 ]
 

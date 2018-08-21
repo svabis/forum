@@ -11,7 +11,7 @@ from forum.paginator import Paginator # import paginator
 
 from blog.models import SuperTema, Tema, Ieraksts
 
-from blog.forms import IerakstsForm
+from blog.forms import IerakstsForm, TemaForm
 
 import math
 
@@ -43,6 +43,8 @@ def main(request, pageid=1):
     args['heading'] = u'Forums | Visas tēmas'
     args['active_tab'] = "visas"
 
+    args['disable_back'] = True
+
     results_per_page = 20
 
     rez_obj = Tema.objects.filter( comment = True ).order_by('-last_entry')
@@ -62,7 +64,9 @@ def main(request, pageid=1):
 
     args['paginator'] = Paginator( pagecount, pageid )
     args['temas'] = rez_obj[start_obj:end_obj]
+
     response = render_to_response('temas.html', args)
+    response.set_cookie( key='page_location', value='/page=' + str(pageid) + '/' )
     return response
 
 
@@ -79,12 +83,18 @@ def super(request, s_id):
     args['heading'] = u'Forums | ' + s.title
     args['active_tab'] = s.slug
 
+    args['disable_back'] = True
+
     temas = Tema.objects.filter( relate_to_super = s, parent = None ).order_by('-last_entry')
 
     args['temas'] = temas
     args['add_tema'] = True
-# CHANGE TEMPLATE (MAYBIE)
+    args['form'] = TemaForm
+
+    args.update(csrf(request)) # ADD CSRF TOKEN
+
     response = render_to_response('temas.html', args)
+    response.set_cookie( key='page_location', value='/' + str(s_id) + '/' )
     return response
 
 
@@ -100,13 +110,21 @@ def temas(request, s_id, t_id, pageid=1):
     args['heading'] = u'Forums | ' + t.relate_to_super.title + " | " + t.title
     args['active_tab'] = t.relate_to_super.slug
 
+    args['parent'] = t.parent
+    args['s_id'] = str(s_id)
+
    # IF TEMA COMMENT IS DISABLED
     if t.comment == False:
         temas = Tema.objects.filter( parent = t ).order_by('-last_entry')
+        args.update(csrf(request)) # ADD CSRF TOKEN
+
         args['temas'] = temas
         args['add_tema'] = True
 
+        args['form'] = TemaForm
+
         response = render_to_response('temas.html', args)
+        response.set_cookie( key='page_location', value='/' + str(s_id) + '/' + str(t_id) + '/' + str(pageid) + '/' )
         return response
 
     args.update(csrf(request)) # ADD CSRF TOKEN
@@ -139,7 +157,6 @@ def temas(request, s_id, t_id, pageid=1):
 
     if request.POST:
         form = IerakstsForm( request.POST, request.FILES )
-        form.user = args['user']
 
         if form.is_valid():
             new_coment = form.save()
@@ -158,11 +175,41 @@ def temas(request, s_id, t_id, pageid=1):
                 t.save()
                 t = t.parent
 
-            response = redirect('/tema/' + str(t_id) + '/#new_comment')
+            response = redirect( '/' + str(s_id) + '/' + str(t_id) + '/#new_comment' )
+            response.set_cookie( key='page_location', value='/' + str(s_id) + '/' + str(t_id) + '/#new_comment' )
             return response
     else:
         args['form'] = IerakstsForm
 
     response = render_to_response('diskusijas.html', args)
+    response.set_cookie( key='page_location', value='/' + str(s_id) + '/' + str(t_id) + '/' + str(pageid) + '/' )
     return response
 
+
+def add_tema(request):
+    args = main_header(request)
+    if request.POST:
+        form = TemaForm( request.POST )
+
+        location = str(request.COOKIES.get('page_location')).split('/')
+
+        if form.is_valid():
+            new_tema = form.save()
+
+            new_tema.relate_to_super = SuperTema.objects.get( slug = location[1] )
+            try:
+                new_tema.parent = Tema.objects.get( slug = location[2] )
+            except:
+                pass
+
+            new_tema.created_by = args['user']
+            new_tema.save()
+
+       # REDIRECT TO PAGE OF ORIGIN
+        if str('page_location') in request.COOKIES:
+            response = redirect( str(request.COOKIES.get('page_location')) )
+        else:
+            response = redirect( '/' )
+        return response
+
+    return redirect('/')

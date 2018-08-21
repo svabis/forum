@@ -7,6 +7,6 @@ urlpatterns = [
     url(r'^logout/$', 'loginsys.views.logout',),
 
    # REGISTRATION
-#    url(r'^register/$', 'loginsys.views.register',),
+    url(r'^signup/$', 'loginsys.views.signup',),
 
 ]
