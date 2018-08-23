@@ -9,14 +9,12 @@
 <div class="navbar-collapse">
  <div class="tabbable">
   <ul class="nav nav-tabs">
-   <li role="presentation"><a href="http://www.kuvalda.lv/gallery/">Lietotāju Galerija</a></li>
-   <li role="presentation" class="active">
 {% if active_tab == "visas" %}<li role="presentation" class="active">{% else %}<li role="presentation">{% endif %}
-<a href="/">Visas</a></li>
+<a href="/"><b>Visas</b></a></li>
 
 {% for s in super %}
 {% if active_tab == s.slug %}<li role="presentation" class="active">{% else %}<li role="presentation">{% endif %}
-<a href="/{{ s.slug }}/">{{ s.title }}</a></li>
+<a href="/{{ s.slug }}/"><b>{{ s.title }}</b></a></li>
 {% endfor%}
 
   </ul>

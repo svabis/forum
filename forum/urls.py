@@ -30,8 +30,10 @@ urlpatterns = [
     url(r'^add_tema/$', 'blog.views.add_tema'),
 
 # temas diskusijas + add Ieraksts
-    url(r'^(?P<s_id>[-\w]+)/(?P<t_id>[-\w]+)/(?P<pageid>\d+)/$', 'blog.views.temas'),
-    url(r'^(?P<s_id>[-\w]+)/(?P<t_id>[-\w]+)/$', 'blog.views.temas'),
+#    url(r'^(?P<s_id>[-\w]+)/(?P<t_id>[-\w]+)/(?P<pageid>\d+)/$', 'blog.views.temas'),
+#    url(r'^(?P<s_id>[-\w]+)/(?P<t_id>[-\w]+)/$', 'blog.views.temas'),
+    url(ur'^(?P<s_id>[-\w]+)/(?P<t_id>.+)/(?P<pageid>\d+)/$', 'blog.views.temas'),
+    url(ur'^(?P<s_id>[-\w]+)/(?P<t_id>.+)/$', 'blog.views.temas'),
 
 # SuperTema izvele
     url(r'^(?P<s_id>[-\w]+)/$', 'blog.views.super'),

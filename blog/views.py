@@ -13,6 +13,8 @@ from blog.models import SuperTema, Tema, Ieraksts
 
 from blog.forms import IerakstsForm, TemaForm
 
+import unicodedata
+import slugify
 import math
 
 #from slugify import slugify
@@ -85,7 +87,7 @@ def super(request, s_id):
 
     args['disable_back'] = True
 
-    temas = Tema.objects.filter( relate_to_super = s, parent = None ).order_by('-last_entry')
+    temas = Tema.objects.filter( relate_to_super = s, parent = None ).order_by('comment', '-last_entry')
 
     args['temas'] = temas
     args['add_tema'] = True
@@ -195,8 +197,13 @@ def add_tema(request):
 
         if form.is_valid():
             new_tema = form.save()
-
             new_tema.relate_to_super = SuperTema.objects.get( slug = location[1] )
+
+           # Create Tema slug from title
+            slug = form.cleaned_data.get('title')
+            slug = unicodedata.normalize('NFKD', slug).encode('ascii','ignore')
+            new_tema.slug =slug.replace('%','')
+
             try:
                 new_tema.parent = Tema.objects.get( slug = location[2] )
             except:
