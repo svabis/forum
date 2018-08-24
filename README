@@ -1,14 +1,21 @@
-1. avatar for user
-2. diskusija add image to right side
+7. test Tema creation for unique slug, if not add random integer while != unique
+
 3. user e-mail unique
+
+6. max sub Tema lvl (ex.5)
+
 4. user register e-mail confirm
+
+1. avatar for user
+
 5. AT TOP (user):
 	1. Change password
 	2. Change username (must be unique)
 	3. Change avatar
 	4. User statistics
-6. max sub Tema lvl (ex.5)
-7. test Tema creation for unique slug, if not add random integer while != unique
+
 
 DONE:
 8. Text breaks
+9. Autoreload page using COOKIE
+2. diskusija add image to right side

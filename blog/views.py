@@ -47,7 +47,7 @@ def main(request, pageid=1):
 
     args['disable_back'] = True
 
-    results_per_page = 20
+    results_per_page = 15
 
     rez_obj = Tema.objects.filter( comment = True ).order_by('-last_entry')
 
@@ -74,7 +74,7 @@ def main(request, pageid=1):
 
 # ================================================================================
 # SUPER TEMAS (Izvele pa kategorijam)
-def super(request, s_id):
+def super(request, s_id, pageid=1):
     args = main_header(request)
 
     try:
@@ -87,9 +87,26 @@ def super(request, s_id):
 
     args['disable_back'] = True
 
-    temas = Tema.objects.filter( relate_to_super = s, parent = None ).order_by('comment', '-last_entry')
+    rez_obj = Tema.objects.filter( relate_to_super = s, parent = None ).order_by('comment', '-last_entry')
 
-    args['temas'] = temas
+    results_per_page = 15
+
+    if int(pageid) < 1: # negative page number --> 404
+        return redirect ('/')
+
+    pagecount = int(math.ceil( int(rez_obj.count()) / float( results_per_page ))) # integer identical to range by count
+
+    if int(pageid) > pagecount and int(pageid) > 1: # pageid exceeds pagecount --> 404
+        return redirect ('/')
+
+    start_obj = int(pageid) * results_per_page - results_per_page # start from image NR
+    end_obj = int(pageid) * results_per_page # end with image NR
+    if end_obj > rez_obj.count(): # if end NR exceeds limit set it to end NR
+        end_obj = rez_obj.count()
+
+    args['paginator'] = Paginator( pagecount, pageid )
+    args['temas'] = rez_obj[start_obj:end_obj]
+
     args['add_tema'] = True
     args['form'] = TemaForm
 
@@ -117,7 +134,7 @@ def temas(request, s_id, t_id, pageid=1):
 
    # IF TEMA COMMENT IS DISABLED
     if t.comment == False:
-        temas = Tema.objects.filter( parent = t ).order_by('-last_entry')
+        temas = Tema.objects.filter( parent = t ).order_by('comment', '-last_entry')
         args.update(csrf(request)) # ADD CSRF TOKEN
 
         args['temas'] = temas
@@ -199,17 +216,20 @@ def add_tema(request):
             new_tema = form.save()
             new_tema.relate_to_super = SuperTema.objects.get( slug = location[1] )
 
+            new_tema.created_by = auth.get_user(request)
+            new_tema.save()
+
            # Create Tema slug from title
             slug = form.cleaned_data.get('title')
             slug = unicodedata.normalize('NFKD', slug).encode('ascii','ignore')
-            new_tema.slug =slug.replace('%','')
+#            new_tema.slug = slug.replace('%','')
+            new_tema.slug = slug
 
             try:
                 new_tema.parent = Tema.objects.get( slug = location[2] )
             except:
                 pass
 
-            new_tema.created_by = args['user']
             new_tema.save()
 
        # REDIRECT TO PAGE OF ORIGIN

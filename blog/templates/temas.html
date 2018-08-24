@@ -3,7 +3,7 @@
 
 {% block tema_data %}
 <style>
- .comments { border-radius: 10px; border: solid #888 1px; background-color: #eee; margin-bottom: 2px; position: relative; }
+ .comments { border-radius: 10px; border: solid #888 1px; background-color: #eee; margin-bottom: 3px; position: relative; }
  .user { border-right: solid #ccc 1px; margin-left: 10px; height:100%; }
  .tema_body { margin-left: -10px; padding-left: 20px; overflow:hidden; }
  .tema_head { background-color: #ccc; height: 10px; border-top-left-radius: 10px; border-top-right-radius: 10px;}
@@ -17,14 +17,13 @@
 <a href="/{{ t.relate_to_super.slug }}/{{ t.slug }}/">
  <div class="row comments" {% if t.comment == False %}style="background-color: #aaa;"{% endif %}>
   <div class="col-sm-12 col-md-12 col-lg-12 tema_head"></div>
-  <div class="col-sm-2 col-md-2 col-lg-2 user">
+  <div class="col-sm-4 col-md-4 col-lg-4 user">
    <h5><b>{{ t.relate_to_super }}</b></h5>
-   <h5>Izveidoja: {{ t.created_by }}</h5>
-   <h6>{{ t.created_date|date:"d/m/Y H:i" }}</h6>
+   <h5><b>Izveidoja:</b> {{ t.created_by }}&nbsp;&nbsp;{{ t.created_date|date:"d/m/Y H:i" }}</h5>
   </div>
-  <div class="col-sm-8 col-md-8 col-lg-8 tema_body">
+  <div class="col-sm-6 col-md-6 col-lg-6 tema_body">
    <h5><b>{% if t.comment %}Diskusija{% else %}Temats{% endif %}</b></h5>
-   <h4>{{ t.title|safe }}&nbsp;&nbsp;<span class="badge"> {{ t.entry_count }}</span></h4>
+   <h4>{{ t.title }}&nbsp;&nbsp;<span class="badge"> {{ t.entry_count }}</span></h4>
   </div>
   <div class="col-sm-2 col-md-2 col-lg-2">
    <center>

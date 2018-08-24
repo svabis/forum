@@ -36,6 +36,7 @@ urlpatterns = [
     url(ur'^(?P<s_id>[-\w]+)/(?P<t_id>.+)/$', 'blog.views.temas'),
 
 # SuperTema izvele
+    url(r'^(?P<s_id>[-\w]+)/(?P<pageid>\d+)/$', 'blog.views.super'),
     url(r'^(?P<s_id>[-\w]+)/$', 'blog.views.super'),
 
 # MAIN --> Visas Tema ar comment=True

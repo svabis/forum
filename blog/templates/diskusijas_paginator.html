@@ -59,22 +59,24 @@ function readURL(input, display) {
  <form action="/{{ s_id }}/{{ tema_slug }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
   <div class="form-group">
    <div class="row">
-    <div class="col-lg-2 col-md-2 col-sm-2" style="padding-top: 7px; border-right: solid #888 1px;">
+    <div class="col-lg-2 col-md-2 col-sm-2" style="padding-top: 7px;">
      <label for="{{ form.user.id_for_label }}">Lietotājs:</label>
       <input class="form-control" id="new_comment" name="user" readonly="readonly" type="text" value="{{ user.username }}">
+    </div>
+    <div class="col-lg-8 col-md-8 col-sm-8" style="padding-top: 7px;">
+     <label for="{{ form.text.id_for_label }}">Komentārs:</label>
+      {{ form.text.errors }}
+      {{ form.text }}
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2" style="padding-top: 27px;">
       <center>
-       <img id="image" src="{% static 'attach.jpeg' %}" style="display: block; max-width: 100px; max-height: 100px; with: auto; height: auto; margin-top: 10px;"/>
+       <img id="image" src="{% static 'attach.jpeg' %}" style="display: block; max-width: 80px; max-height: 80px; with: auto; height: auto; margin-top: 10px;"/>
        <input id="id_image" type="file" name="image" style="display: none" onchange="readURL(this, 'image');"/>
        <h6>Pievienot attēlu</h6>
       </center>
     </div>
-    <div class="col-lg-10 col-md-10 col-sm-10" style="padding-top: 10px;">
-     <label for="{{ form.text.id_for_label }}">Diskusijas teksts:</label>
-      {{ form.text.errors }}
-      {{ form.text }}
-    </div>
    </div>
-   <div class="row" style="border-top: solid #888 1px;">
+   <div class="row" style="border-top: solid #888 1px; margin-top: 10px;">
     <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4" style="margin-top: 17px;">
       <a href="/{{ s_id }}/{{ parent.slug }}/"><button type="button" class="btn" style="border: solid #aaa 1px; margin-right: 10px;">
         <span class="glyphicon glyphicon-backward" aria-hidden="true"> </span></button></a>
