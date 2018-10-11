@@ -13,11 +13,11 @@ class SignUpForm(UserCreationForm):
     last_name = forms.CharField( max_length=30, required=False, label='Uzvārds',
         widget = forms.TextInput(attrs={'class': 'form-control'}) )
 
-    email = forms.EmailField( max_length=254, help_text='Objigāti aizpildāms', label='E-pasts',
+    email = forms.EmailField( max_length=254, help_text='Obligāti aizpildāms', label='E-pasts',
 #        error_message = (u'Šis lauks ir obligāts'),
         widget = forms.EmailInput( attrs={'class': 'form-control'}) )
 
-    username = forms.CharField( max_length=30, required=True, help_text='Obligāts aizpildāms', label='Lietotājvārds',
+    username = forms.CharField( max_length=30, required=True, help_text='Obligāti aizpildāms', label='Lietotājvārds',
 #        error_message = (u'Šis lauks ir obligāts'),
         widget = forms.TextInput(attrs={'class': 'form-control'}) )
 

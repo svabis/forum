@@ -10,11 +10,11 @@
  <div class="tabbable">
   <ul class="nav nav-tabs">
 {% if active_tab == "visas" %}<li role="presentation" class="active">{% else %}<li role="presentation">{% endif %}
-<a href="/"><b>Visas</b></a></li>
+<a href="/">Visas</a></li>
 
 {% for s in super %}
 {% if active_tab == s.slug %}<li role="presentation" class="active">{% else %}<li role="presentation">{% endif %}
-<a href="/{{ s.slug }}/"><b>{{ s.title }}</b></a></li>
+<a href="/{{ s.slug }}/">{{ s.title }}</a></li>
 {% endfor%}
 
   </ul>

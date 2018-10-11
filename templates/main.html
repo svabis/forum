@@ -75,12 +75,12 @@ background-position: center center; background-repeat: no-repeat; position: abso
    </li>{% endif %}
 
   <li class="active"><a href="/"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> &nbsp;Forum</a></li>
-  <li><a href="#"><span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> &nbsp;Shop</a></li>
+  <li><a href="http://82.196.7.52/"><span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> &nbsp;Shop</a></li>
   <li><a href="http://www.kuvalda.lv/"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> &nbsp;Media</a></li>
 
-
-<!--  <li><a href="http://www.kuvalda.lv/auth/login/"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;&nbsp;Log in</a></li> -->
-
+{% if username.is_superuser %}
+  <li><a target="_blank" href="/admin9876/"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;&nbsp;Django</a></li>
+{% endif %}
 
 {% if user.username %}
   <li><a href="#" data-toggle="modal" data-target="#UserModal"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;&nbsp;{{ user.username }}</a></li>

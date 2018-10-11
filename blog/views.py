@@ -17,7 +17,8 @@ import unicodedata
 import slugify
 import math
 
-#from slugify import slugify
+import random
+import string
 
 # !!!!!!! IP GRABBER
 def get_client_ip(request):
@@ -178,7 +179,7 @@ def temas(request, s_id, t_id, pageid=1):
         form = IerakstsForm( request.POST, request.FILES )
 
         if form.is_valid():
-            new_coment = form.save()
+            new_coment = form.save( commit = False )
             new_coment.relate_to = t
             new_coment.user = args['user']
             new_coment.save()
@@ -213,6 +214,11 @@ def add_tema(request):
         location = str(request.COOKIES.get('page_location')).split('/')
 
         if form.is_valid():
+           # RETRIEVE ALL SLUG
+            st = list(SuperTema.objects.values_list('slug', flat=True))
+            ts = list(Tema.objects.values_list('slug', flat=True))
+            slugs = st + ts
+
             new_tema = form.save()
             new_tema.relate_to_super = SuperTema.objects.get( slug = location[1] )
 
@@ -222,7 +228,9 @@ def add_tema(request):
            # Create Tema slug from title
             slug = form.cleaned_data.get('title')
             slug = unicodedata.normalize('NFKD', slug).encode('ascii','ignore')
-#            new_tema.slug = slug.replace('%','')
+
+            while slug in slugs:
+                slug = slug + random.choice(string.ascii_letters)
             new_tema.slug = slug
 
             try:
