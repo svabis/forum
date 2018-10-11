@@ -1,5 +1,3 @@
-7. test Tema creation for unique slug, if not add random integer while != unique
-
 3. user e-mail unique
 
 6. max sub Tema lvl (ex.5)
@@ -19,3 +17,5 @@ DONE:
 8. Text breaks
 9. Autoreload page using COOKIE
 2. diskusija add image to right side
+7. test Tema creation for unique slug, if not add random integer while != unique
+
